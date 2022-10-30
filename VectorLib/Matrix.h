@@ -6,7 +6,7 @@
 const int MAX_MATRIX_SIZE = 10000;
 
 template<typename T>
-class TDynamicMatrix : private TDynamicVector < TDynamicVector < T>>
+class TDynamicMatrix : public TDynamicVector < TDynamicVector < T>>
 {
     using TDynamicVector <TDynamicVector <T>>::pMem;
     using TDynamicVector <TDynamicVector <T>>::sz;
@@ -15,7 +15,7 @@ public:
     TDynamicMatrix(size_t size = 1);
     virtual ~TDynamicMatrix() {};
 
-    bool operator==(const TDynamicMatrix& m) const noexcept;
+    bool operator==(const TDynamicMatrix& m);
 
     TDynamicMatrix<T> operator*(const T val);
     TDynamicMatrix<T> operator*=(const T val);
@@ -34,12 +34,14 @@ public:
 template<typename T>
 inline TDynamicMatrix<T>::TDynamicMatrix(size_t size) : TDynamicVector<TDynamicVector<T>>(size)
 {
+    if (size > MAX_MATRIX_SIZE)
+        throw "size > MAX_MATRIX_SIZE";
     for (size_t i = 0; i < sz; i++)
         pMem[i] = TDynamicVector<T>(sz);
 }
 
 template<typename T>
-inline bool TDynamicMatrix<T>::operator==(const TDynamicMatrix& m) const noexcept
+inline bool TDynamicMatrix<T>::operator==(const TDynamicMatrix& m)
 {
     return TDynamicVector<TDynamicVector<T>>::operator == (m);
 }
